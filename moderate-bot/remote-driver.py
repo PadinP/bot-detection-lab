@@ -5,7 +5,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as FirefoxService
 import json
+import os
 
+def create_json_file_if_not_exists():
+    if not os.path.exists('products.json'):
+        with open('products.json', 'w') as json_file:
+            json.dump({"clothes": [], "accesories": [], "art": []}, json_file)
 
 def get_clothes():
     print('GET CLOTHES')
@@ -77,14 +82,14 @@ def get_discount():
 def login():
     print('LOGIN..')
     browser.find_element(By.CLASS_NAME, 'user-info').click()
-    browser.find_element(By.ID, 'field-email').send_keys('puertadavid96@email.com')
+    browser.find_element(By.ID, 'field-email').send_keys('alexpp2809@gmail.com')
     browser.find_element(By.ID, 'field-password').send_keys('Qwe1234567@rs*')  # 12345678
     browser.find_element(By.ID, 'submit-login').click()
     time.sleep(10)
 
 
 if __name__ == '__main__':
-    remote_url = 'http://172.26.0.%s:4444/wd/hub'
+    remote_url = 'http://172.18.0.%s:4444/wd/hub'
     args = sys.argv
     try:
         BOT = int(args[1])
@@ -94,6 +99,8 @@ if __name__ == '__main__':
         print('No number of bot specified')
         print(e)
         sys.exit()
+    # service = FirefoxService(executable_path='/usr/local/bin/geckodriver')  # set webdriver path
+    service = FirefoxService(executable_path='./geckodriver') # set webdriver path 
     firefox_options = webdriver.FirefoxOptions()
     firefox_options.add_argument('--no-sandbox')
     firefox_options.add_argument('--headless')
@@ -101,11 +108,12 @@ if __name__ == '__main__':
     firefox_options.add_argument('--disable-dev-shm-usage')
     firefox_options.add_argument("--window-size=1920,1080")
     browser = webdriver.Remote(command_executor=remote_url, options=firefox_options)
-    browser.get('http://172.26.0.3')
+    browser.get('http://172.18.0.3')
     print('Current page: %s' % browser.current_url)
     print('READY')
     login()
 
+    create_json_file_if_not_exists()  # Ensure the JSON file exists
     while True:
         get_clothes()
         get_accessories()
