@@ -84,15 +84,18 @@ class FlowAnalysis(Thread):
             last_src = None
             last_dst = None
             if '172.26.0' in self.src_adr:
-                last_src = int(self.src_adr.split('.')[len(self.src_adr.split('.')) - 1])
+                last_src = int(self.src_adr.split(
+                    '.')[len(self.src_adr.split('.')) - 1])
             if '172.26.0' in self.dst_adr:
-                last_dst = int(self.dst_adr.split('.')[len(self.dst_adr.split('.')) - 1])
+                last_dst = int(self.dst_adr.split(
+                    '.')[len(self.dst_adr.split('.')) - 1])
             if (last_src and last_src > 3) or (last_dst and last_dst > 3):
                 self.flow = 'Botnet'
             elif (last_src and last_src == 1) or (last_dst and last_dst == 1):
                 self.flow = 'Normal'
 
-        logging.info(f'Packet #{self.packet.number} processed in thread: %s', self.name)
+        logging.info(
+            f'Packet #{self.packet.number} processed in thread: %s', self.name)
 
     def on_thread(self, function, *args, **kwargs):
         self.q.put((function, args, kwargs))
@@ -101,7 +104,8 @@ class FlowAnalysis(Thread):
         self.init()
         while self.continue_flag:
             try:
-                function, args, kwargs = self.q.get(block=True, timeout=INTERVAL)
+                function, args, kwargs = self.q.get(
+                    block=True, timeout=INTERVAL)
             except queue.Empty:
                 self.save_to_file()
                 self.continue_flag = False
@@ -141,7 +145,8 @@ class FlowAnalysis(Thread):
         if 'F' in self.state or 'R' in self.state:
             pass
 
-        logging.info(f'Packet #{packet.number} processed in thread: %s', self.name)
+        logging.info(
+            f'Packet #{packet.number} processed in thread: %s', self.name)
         if terminate:
             self.save_to_file()
             self.kill()
@@ -185,7 +190,8 @@ class FlowAnalysis(Thread):
                                     index = state_update.index(flag)
                             if index is not None:
                                 index += 1
-                                state_update = ''.join([state_update[:index], key, state_update[index:]])
+                                state_update = ''.join(
+                                    [state_update[:index], key, state_update[index:]])
                             else:
                                 state_update = ''.join([key, state_update])
             if is_src:
@@ -205,10 +211,11 @@ class FlowAnalysis(Thread):
         return state
 
     def save_to_file(self):
-        with open('flow_analysis.bitnetflow', 'a') as f:
+        with open('flow_analysis.binetflow', 'a') as f:
             try:
                 f.write(f'{self.start_time},{self.duration},{self.protocol},{self.src_adr},{self.src_port},'
-                        f'{self.dst_adr},{self.dst_port},{self.state},{self.s_tos},{self.d_tos},{self.tot_pkts},'
+                        f'{self.dst_adr},{self.dst_port},{self.state},{
+                            self.s_tos},{self.d_tos},{self.tot_pkts},'
                         f'{self.tot_bytes},{self.src_bytes},flow={self.flow}\n')
                 logging.info('Saving to file flow with id: %s', self.name)
             except Exception as e:
