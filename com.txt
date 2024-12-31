@@ -1,0 +1,97 @@
+
+PASOS PARA CONFIGURAR EL SITIO WEB
+
+1-# Crear una red Docker llamada 'presta'
+sudo docker network create presta
+
+2-# Ejecutar un contenedor MySQL en la red 'presta'
+sudo docker run -ti --name mysql --network presta \
+  -e MYSQL_ROOT_PASSWORD=admin \
+  -p 3307:3306 \
+  -d mysql
+
+3-# Ejecutar un contenedor Prestashop conectado a la red 'presta'
+sudo docker run -ti --name presta --network presta \
+  -e DB_SERVER=mysql \
+  -e PS_DOMAIN=localhost:8080 \
+  -p 8080:80 \
+  -d prestashop/prestashop
+
+4 #imagen phpmyadmin
+sudo docker run --name myadmin --network presta -d --link mysql:db -p 8084:80 phpmyadmin
+
+phpmyadmin:
+usuario : root
+contrasenna: admin
+
+#crear la base de datos
+sudo docker exec -it mysql mysql -u root -p
+
+CREATE DATABASE prestashop;
+CREATE USER 'prestashopuser'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON prestashop.* TO 'prestashopuser'@'%';
+FLUSH PRIVILEGES;
+
+
+Dirección del servidor de la base de datos: mysql
+Nombre de la base de datos : prestashop
+Usuario de la base de datos : prestashopuser
+Contraseña de la base de datos : password
+
+Qwe1234567@rs*
+
+https://www.youtube.com/watch?v=0DWlTtjBEYY
+
+
+webdriver 
+
+#Añadir el repositorio de Mozilla:
+
+sudo add-apt-repository ppa:mozillateam/ppa
+sudo apt-get update
+
+#Instalar firefox-geckodriver
+sudo apt install firefox-geckodriver
+
+#En caso de dar problemas la instalacion Instala la versión específica de Firefox que firefox-geckodriver requiere:
+
+ sudo apt install firefox=133.0.3+build1-0ubuntu0.24.04.1~mt1
+
+
+Actualizar la Lista de Paquetes: Asegúrate de que tu lista de paquetes esté actualizada:
+
+bash
+sudo apt update
+
+Instalar Firefox Manualmente: Dado que firefox-geckodriver depende de una versión específica de Firefox, puedes intentar instalar esa versión manualmente. Primero, verifica qué versiones están disponibles:
+
+bash
+apt-cache policy firefox
+
+Luego, puedes instalar la versión requerida (en este caso, 132.0.2+build2-0ubuntu0.24.04.1~mt1) usando:
+
+bash
+sudo apt install firefox=132.0.2+build2-0ubuntu0.24.04.1~mt1
+
+remote driver 
+sudo docker-compose up -d driver-1
+crear uno a uno cambiar el 1 por un numero del 1-5
+
+
+#Para eliminar la red llamada presta en Docker, puedes usar el siguiente comando:
+
+sudo docker network rm presta
+
+# Esto eliminará la red presta. Si la red está en uso por algún contenedor, primero tendrás que detener los contenedores que la están utilizando. Para ver qué contenedores están usando la red, puedes usar:
+
+sudo docker network inspect presta
+
+# Eliminar la red existente:
+sudo docker network rm presta
+
+# Ver las redes activas:
+sudo docker network ls
+
+
+ sudo apt install python-is-python3
+
