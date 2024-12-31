@@ -78,8 +78,8 @@ def login():
     time.sleep(10)
 
 if __name__ == '__main__':
-    service = FirefoxService(executable_path='./geckodriver')  # set webdriver path
-    #service = FirefoxService(executable_path='/usr/local/bin/geckodriver')  # set webdriver path
+    # service = FirefoxService(executable_path='./geckodriver')  # set webdriver path
+    service = FirefoxService(executable_path='/usr/local/bin/geckodriver')  # set webdriver path
     firefox_options = webdriver.FirefoxOptions()
     firefox_options.headless = True
     browser = webdriver.Firefox(options=firefox_options, service=service)
